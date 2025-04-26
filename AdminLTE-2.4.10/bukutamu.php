@@ -22,7 +22,7 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form role="form" method="post" action="simpan.php">
+            <form role="form" method="post" action="proses/simpan.php">
               <div class="box-body">
                 <div class="form-group">
                     <label for="nama">Nama</label>

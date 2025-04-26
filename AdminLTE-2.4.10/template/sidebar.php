@@ -49,7 +49,7 @@
           </a>
           <ul class="treeview-menu">
             <li class="active"><a href="bukutamu.php"><i class="fa fa-circle-o"></i> Input Buku Tamu</a></li>
-            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Lihat Data Buku Tamu</a></li>
+            <li><a href="tampildatabt.php"><i class="fa fa-circle-o"></i> Lihat Data Buku Tamu</a></li>
           </ul>
         </li>
       </ul>

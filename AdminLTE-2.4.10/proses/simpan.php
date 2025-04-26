@@ -1,29 +1,88 @@
-<?php 
-include 'koneksi.php';
-echo "<table border='1'>";
-$nama_tamu = $_POST['nama'];
-$alamat_tamu = $_POST['alamat'];
-$notelp_tamu = $_POST['notelp'];
-$pesan_tamu = $_POST['pesan'];
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
+include '../koneksi.php';
 
-if (($nama_tamu!= "") && ($alamat_tamu!= "") && ($notelp_tamu!= "") && ($pesan_tamu!= "")) {
-    $sql = "INSERT INTO buku_tamu (nama_tamu, alamat_tamu, notelp_tamu, pesan_tamu, tanggal_bertamu) 
-        VALUES ('$nama_tamu', '$alamat_tamu', '$notelp_tamu', '$pesan_tamu', now())";
-    
-    $hasil = mysqli_query($connection, $sql);
-    if ($hasil) {
-        echo "<tr><td colspan=2>Data berhasil disimpan</td></tr>";
-        echo "<tr><td>Nama</td><td>$nama_tamu</td></tr>";
-        echo "<tr><td>Alamat</td><td>$alamat_tamu</td></tr>";
-        echo "<tr><td>No Telepon</td><td>$notelp_tamu</td></tr>";
-        echo "<tr><td>Pesan</td><td>$pesan_tamu</td></tr>";
-        echo "<tr><td>Tanggal Bertamu</td><td>".date("Y-m-d H:i:s")."</td></tr>";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nama_tamu = $_POST['nama'] ?? '';
+    $alamat_tamu = $_POST['alamat'] ?? '';
+    $notelp_tamu = $_POST['notelp'] ?? '';
+    $pesan_tamu = $_POST['pesan'] ?? '';
+
+    if (!empty($nama_tamu) && !empty($alamat_tamu) && !empty($notelp_tamu) && !empty($pesan_tamu)) {
+        $sql = "INSERT INTO buku_tamu (nama_tamu, alamat_tamu, notelp_tamu, pesan_tamu, tanggal_bertamu) 
+                VALUES ('$nama_tamu', '$alamat_tamu', '$notelp_tamu', '$pesan_tamu', NOW())";
+
+        if (mysqli_query($connection, $sql)) {
+            // Berhasil insert
+            echo "
+            <html>
+            <head>
+                <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            </head>
+            <body>
+                <script>
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: 'Data berhasil disimpan!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '../tampildatabt.php';
+                        }
+                    });
+                </script>
+            </body>
+            </html>
+            ";
+        } else {
+            // Gagal insert
+            echo "
+            <html>
+            <head>
+                <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            </head>
+            <body>
+                <script>
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: 'Data gagal disimpan.',
+                        icon: 'error',
+                        confirmButtonText: 'Coba Lagi'
+                    }).then((result) => {
+                        window.history.back();
+                    });
+                </script>
+            </body>
+            </html>
+            ";
+        }
     } else {
-        echo "<tr><td colspan=2>Data gagal disimpan disimpan</td></tr>";
-    }    
-}else {
-    echo "<tr><td colspan=2>Data tidak boleh kosong</td></tr>";
+        // Form kosong
+        echo "
+        <html>
+        <head>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        </head>
+        <body>
+            <script>
+                Swal.fire({
+                    title: 'Oops!',
+                    text: 'Data tidak boleh kosong!',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    window.history.back();
+                });
+            </script>
+        </body>
+        </html>
+        ";
+    }
+} else {
+    // Kalau bukan method POST
+    echo "Akses tidak sah!";
 }
-
-?> 
+?>
